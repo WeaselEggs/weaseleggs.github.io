@@ -5,7 +5,7 @@ Hello! This website, put together by a First Lego League team called the Weasel 
 
 
 
-<A href ="https://apps.deadiversion.usdoj.gov/pubdispsearch/spring/main?execution=e2s1"</ref>
+https://apps.deadiversion.usdoj.gov/pubdispsearch/spring/main?execution=e2s1
 
 
 Why shouldn’t you just flush it? Read on to find out.
