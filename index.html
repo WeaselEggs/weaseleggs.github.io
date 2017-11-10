@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Safely Dispose Medications</title>
+<title>Safely Dispose Meds</title>
+<style>
+#search{
+	display:none;
+}
+</style>
 </head>
-
 <body>
-  <h1>Safely Dispose of your Medications</h1>
 <p>  
 Hello! This website, put together by a First Lego League team called the Weasel Eggs, will help tell you 
 where to dispose of your medicine safely. the link below lets you know where you can safely dispose 
 medications based on zip code.
-</p>
-
-<p>
-<a href="https://apps.deadiversion.usdoj.gov/pubdispsearch/spring/main?execution=e2s1">Government site for medicine disposal</a>
 </p>
 
 <p>
@@ -37,5 +36,65 @@ the groundwater. In this situation, the medicine could be absorbed by plants, to
 use the link above and find where you can dispose meds.
 </p>
 
+<p>Click the button to get your coordinates.</p>
+
+<button onclick="getLocation()">Get Location</button>
+
+<div id="search">
+	<form id="searchForm" name="searchForm" method="post" action="https://apps.deadiversion.usdoj.gov/pubdispsearch/spring/main?execution=e1s3" enctype="application/x-www-form-urlencoded">
+		<input type="hidden" name="searchForm" value="searchForm">
+		<input id="searchForm:zipCodeInput" name="searchForm:zipCodeInput" type="text" value="" maxlength="5" size="6">
+		<input name="searchForm:radiusInput" type="hidden" value="20" />
+		<input name="searchForm:submitSearchButton" type="hidden" value="Submit" />
+		<input type="submit" value="submit" />
+		<input type="hidden" name="javax.faces.ViewState" id="javax.faces.ViewState" value="e1s3">
+	</form>
+</div>
+
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function showPosition(position) {
+	loadDoc (position.coords.latitude, position.coords.longitude) 
+}
+
+function gettingResults() {
+	if (this.readyState == 4 && this.status == 200) {
+		isolatePostalCode(JSON.parse(this.responseText));
+	}
+};
+
+function isolatePostalCode(results) 
+{
+	if(results.results.length>1){
+		var components = results.results[0].address_components
+		
+		for(var i = 0; i<components.length; i++){
+			if (components[i].types[0] == "postal_code"){
+				var zipcode = components[i].long_name
+				console.log (zipcode)
+				document.getElementById("searchForm:zipCodeInput").value = zipcode
+				document.getElementById("searchForm").submit();
+			} 
+		}
+	}
+}
+	
+
+function loadDoc(latitude, longitude) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = gettingResults;
+  xhttp.open("GET", "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&key=AIzaSyC3db3vX_VtnuqYh9M5yjes-DpcyEyjd-8", true);
+  xhttp.send();
+}
+</script>
+
 </body>
 </html>
+
